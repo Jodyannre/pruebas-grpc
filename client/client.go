@@ -58,7 +58,7 @@ func conectar_server(wri http.ResponseWriter, req *http.Request) {
 	}
 	//Retornar respuesta
 	log.Printf("Respuesta del server: %s\n", ret.GetInfo())
-	json.NewEncoder(wri).Encode("Se ha almacenado la información")
+	json.NewEncoder(wri).Encode(ret.GetInfo())
 }
 
 func main() {
