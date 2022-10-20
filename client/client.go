@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
 	//"io/ioutil"
 	"log"
 	"net/http"
-	//"os"
+
+	"os"
 	"time"
 
 	pb "client/proto-grpc"
@@ -16,25 +18,24 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	address = "localhost:50051"
-)
-
 type Informacion struct {
 	Team1 string `json:"team1"`
-    Team2 string `json:"team2"`
-    Score string `json:"score"`
-    Phase string `json:"phase"`
+	Team2 string `json:"team2"`
+	Score string `json:"score"`
+	Phase string `json:"phase"`
 }
 
 func conectar_server(wri http.ResponseWriter, req *http.Request) {
-	//Declaraciones 
+	//Declaraciones
 	var info Informacion
+
+	//Obtener direccion del server
+	host := os.Getenv("HOST_GRPC")
 
 	// AGREGAR CORS
 	SetCors(wri)
 
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(host+":50051", grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		json.NewEncoder(wri).Encode("No se puede conectar con el server de grpc")
 		log.Fatalf("No se pudo conectar con el server :c (%v)", err)
@@ -50,7 +51,7 @@ func conectar_server(wri http.ResponseWriter, req *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 	//Mandar info al servidor
-	ret, err := cl.ReturnInfo(ctx, &pb.RequestInfo{Team1: info.Team1,Team2:info.Team2,Score:info.Score,Phase:info.Phase})
+	ret, err := cl.ReturnInfo(ctx, &pb.RequestInfo{Team1: info.Team1, Team2: info.Team2, Score: info.Score, Phase: info.Phase})
 	if err != nil {
 		json.NewEncoder(wri).Encode("Error, no  se puede retornar la información.")
 		log.Fatalf("No se puede retornar la información :c (%v)", err)
@@ -67,7 +68,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
 
-func SetCors(wri http.ResponseWriter){
+func SetCors(wri http.ResponseWriter) {
 	(wri).Header().Set("Access-Control-Allow-Origin", "*")
 	(wri).Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	(wri).Header().Set("Content-Type", "application/json")
