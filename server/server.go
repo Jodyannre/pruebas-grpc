@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 	pb "server/proto-grpc"
 
 	//"time"
@@ -12,8 +13,11 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	port = ":50051"
+var (
+	redishost = os.Getenv("HOST_GRPC")
+	redispass = os.Getenv("HOST_GRPC")
+	redisport = os.Getenv("HOST_GRPC")
+	port      = ":50051"
 )
 
 type server struct {
@@ -31,10 +35,10 @@ func almacenar_datos(t1 string, t2 string, field string, phase string) {
 
 	//Crear la conexion
 	var ctx = context.Background()
-	ip := "172.17.0.2:6379"
+	ip := redishost + ":6379"
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     ip,
-		Password: "",
+		Password: redispass,
 		DB:       0,
 	})
 	//Agregar o incrementar  valor
