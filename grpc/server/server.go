@@ -15,8 +15,8 @@ import (
 
 var (
 	redishost = os.Getenv("HOST_GRPC")
-	redispass = os.Getenv("HOST_GRPC")
-	redisport = os.Getenv("HOST_GRPC")
+	redispass = os.Getenv("PASS_GRPC")
+	redisport = os.Getenv("PORT_GRPC")
 	port      = ":50051"
 )
 
@@ -35,7 +35,7 @@ func almacenar_datos(t1 string, t2 string, field string, phase string) {
 
 	//Crear la conexion
 	var ctx = context.Background()
-	ip := redishost + ":6379"
+	ip := redishost + ":" + redisport
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     ip,
 		Password: redispass,
