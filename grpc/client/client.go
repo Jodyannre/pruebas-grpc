@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	//"io/ioutil"
 	"log"
@@ -22,7 +23,7 @@ type Informacion struct {
 	Team1 string `json:"team1"`
 	Team2 string `json:"team2"`
 	Score string `json:"score"`
-	Phase string `json:"phase"`
+	Phase int    `json:"phase"`
 }
 
 func conectar_server(wri http.ResponseWriter, req *http.Request) {
@@ -51,7 +52,8 @@ func conectar_server(wri http.ResponseWriter, req *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 	//Mandar info al servidor
-	ret, err := cl.ReturnInfo(ctx, &pb.RequestInfo{Team1: info.Team1, Team2: info.Team2, Score: info.Score, Phase: info.Phase})
+	ret, err := cl.ReturnInfo(ctx, &pb.RequestInfo{Team1: info.Team1, Team2: info.Team2,
+		Score: info.Score, Phase: strconv.Itoa(info.Phase)})
 	if err != nil {
 		json.NewEncoder(wri).Encode("Error, no  se puede retornar la información.")
 		log.Fatalf("No se puede retornar la información :c (%v)", err)
