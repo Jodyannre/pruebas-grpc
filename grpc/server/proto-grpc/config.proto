@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "confproto";
+option go_package = "./confproto";
 
 package confproto;
 
@@ -21,7 +21,7 @@ message replyInfo {
 
 //Para compilar
 /* Instalar
-protoc --go_out=plugins=grpc:. config.proto
+C:\protoc-21.8-win64\bin\protoc --go_out=plugins=grpc:. config.proto
 protoc --go_out=plugins=grpc:. config.proto
 */
-//protoc --go_out=plugins=grpc:. config.proto
+//C:\protoc-21.8-win64\bin\protoc --go_out=plugins=grpc:. config.proto

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"os"
 	pb "server/proto-grpc"
 
 	//"time"
@@ -14,10 +13,7 @@ import (
 )
 
 var (
-	redishost = os.Getenv("HOST_GRPC")
-	redispass = os.Getenv("PASS_GRPC")
-	redisport = os.Getenv("PORT_GRPC")
-	port      = ":50051"
+	port = ":50051"
 )
 
 type server struct {
@@ -34,17 +30,20 @@ func almacenar_datos(t1 string, t2 string, field string, phase string) {
 	fmt.Printf(key + "\n")
 
 	//Crear la conexion
+	//Crear la conexion
 	var ctx = context.Background()
-	ip := redishost + ":" + redisport
+	const ip = "baseredisdb2.redis.cache.windows.net:6379"
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     ip,
-		Password: redispass,
+		Password: "Z4OB967BvclEP8d11anmobzkHx92EXSEWAzCaC0nUiY=",
 		DB:       0,
 	})
 	//Agregar o incrementar  valor
 	val := rdb.HIncrBy(ctx, key, field, 1)
 	total := rdb.IncrBy(ctx, keyTotal, 1)
 	conjunto := rdb.SAdd(ctx, fase, equipos)
+	miemros := rdb.SMembers(ctx, "Fase:3")
+	fmt.Println(miemros)
 	//ErrorHandler(err)
 	fmt.Println("El valor guardado  es: ", val)
 	fmt.Println("El total es: ", total)

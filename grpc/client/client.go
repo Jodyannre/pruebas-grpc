@@ -31,7 +31,7 @@ func conectar_server(wri http.ResponseWriter, req *http.Request) {
 
 	//Obtener direccion del server
 	host := os.Getenv("HOST_GRPC")
-
+	//host = "localhost"
 	// AGREGAR CORS
 	SetCors(wri)
 
