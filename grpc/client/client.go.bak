@@ -49,7 +49,6 @@ func conectar_server(wri http.ResponseWriter, req *http.Request) {
 	//Get info enviada para guardar
 	json.NewDecoder(req.Body).Decode(&info)
 	//Crear contexto
-	fmt.Println("Info recibida: ", info.Team1, info.Team2, info.Score,strconv.Itoa(info.Phase))
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 	//Mandar info al servidor
@@ -66,7 +65,6 @@ func conectar_server(wri http.ResponseWriter, req *http.Request) {
 
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
-	fmt.Println("Ingresando al cliente de grpc")
 	router.HandleFunc("/", conectar_server).Methods("POST")
 	fmt.Println("Cliente se levanto en el puerto 8000")
 	log.Fatal(http.ListenAndServe(":8000", router))
