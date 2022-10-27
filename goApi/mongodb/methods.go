@@ -90,7 +90,7 @@ func Purge(client *mongo.Client) http.HandlerFunc {
 		}
 		defer cursor.Close(ctx)
 		for cursor.Next(ctx) {
-			var nLog LogMongo
+			var nLog LogMongo2
 			cursor.Decode(&nLog)
 			collection.DeleteOne(ctx, bson.M{"_id": nLog.ID})
 			//fmt.Println(nLog.ID)
