@@ -21,7 +21,7 @@ ChartJS.register(
   Legend
 );
 
-
+/*
 const UserData = [
   {
       id: 1,
@@ -54,7 +54,8 @@ const UserData = [
       userLost: 234,
   },
 ]
-  
+*/  
+
 const options = {
   indexAxis: 'y',
   elements: {

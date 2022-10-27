@@ -3,11 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import * as dotenv from 'dotenv'
+//import * as dotenv from 'dotenv'
 
 
 //Ip del servidor
-global.ip = "localhost"
+//global.ip = "localhost"
+global.ip = "34.125.126.193"
+//global.ip = "localhost"
 global.port = "4000"
 
 ReactDOM.render(<App />, document.getElementById('root'));

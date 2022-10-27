@@ -1,10 +1,10 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import { redirect } from "react-router-dom";
+//import { redirect } from "react-router-dom";
 
 import Navigation from './components/Navigation'
-import GraficaLive from './components/GraficaLive'
+//import GraficaLive from './components/GraficaLive'
 import SelectorPartido from './components/SelectorPartido'
 import MongoDash from './components/MongoDash'
 

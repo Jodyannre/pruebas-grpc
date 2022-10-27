@@ -3,8 +3,8 @@ import axios from "axios";
 import '../styles/styles.css'
 import Table from 'react-bootstrap/Table'
 import {Form} from 'react-bootstrap'
-import Dropdown from 'react-bootstrap/Dropdown';
-import GraficaLive from "./GraficaLive";
+//import Dropdown from 'react-bootstrap/Dropdown';
+//import GraficaLive from "./GraficaLive";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -47,22 +47,22 @@ const options = {
 }
 
 
-const labels = ["2-2", "3-2", "5-1"];
-const numbers = [100,200,50]
+//const labels = ["2-2", "3-2", "5-1"];
+//const numbers = [100,200,50]
 
 
 export default function SelectorPartido() {
   const [datos, setDatos] = useState([])
   const [fases, setFases] = useState([])
-  const [partido,setPartido] = useState("#partido")
+  const [partido,setPartido] = useState("Seleccione un partido")
   const [key, setKey] = useState("")
-  const [prekey, setPrekey] = useState("")
+  //const [prekey, setPrekey] = useState("")
   const [selectedPhase, setSelectedPhase] = useState(0)
-  const [llamarGrafica, setLlamarGrafica] = useState(false)
+  //const [llamarGrafica, setLlamarGrafica] = useState(false)
   const [time, setTime] = React.useState(0);
-  const [dataGraph, setDataGraph] = useState([])
-  const [labelsGraph,setLabelsGraph] = useState([])
-  const [tituloGraph, setTituloGraph] = useState("")
+  //const [dataGraph, setDataGraph] = useState([])
+  //const [labelsGraph,setLabelsGraph] = useState([])
+  //const [tituloGraph, setTituloGraph] = useState("")
 
 
   const getDataGraph = () => {
@@ -70,12 +70,16 @@ export default function SelectorPartido() {
     var label = [""]
     label.pop()
     dato.pop()
-    
+    try{
     datos.map((obj) => {
       //console.log(obj)
       dato.push(obj.Total)
       label.push(obj.Partido)
+      return 1
     })
+    }catch(err){
+      //console.log("Medio error, porque no se selecciono partido, en fin, no es error.")
+    }
     //console.log(dato)
     //console.log(label)
     //console.log("Si entro aqui")
@@ -120,7 +124,12 @@ export default function SelectorPartido() {
   const getDataFases = async () => {
     const res = await axios.get(`http://${global.ip}:${global.port}/getDataFases`);
     //const texto = JSON.stringify(res.data)
+    res.data.Fase1.sort()
+    res.data.Fase2.sort()
+    res.data.Fase3.sort()
+    res.data.Fase4.sort()
     setFases(res.data)
+    //const array = res.data
     console.log(fases)
     //console.log(res.data.Fase2)
   }
@@ -168,22 +177,23 @@ export default function SelectorPartido() {
 }
 
 const onChangePhase = (e)=>{
+  document.getElementById("selector-partido").selectedIndex = 0
   setSelectedPhase(e.target.value);
   setKey("")
   setDatos([])
-  setPartido("#partido")
+  setPartido("Seleccione un partido")
 }
 
 const onChangeKey = (e)=>{
   setKey(e.target.value+":"+selectedPhase)
   var str = ""
   str = e.target.value.toString()
-  setPartido(str.replace(":"," vs "))
+  setPartido("Gráfica de "+ str.replace(":"," vs "))
 }
 
   useEffect(()=>{
     console.log(key)
-    if (key!=""){
+    if (key!==""){
       getDataPartidos();
     }
     getDataFases();
@@ -197,7 +207,7 @@ const onChangeKey = (e)=>{
         getDataFases();
       }
       */
-    }, 5000);
+    }, 3500);
     return () => {
       window.clearInterval(timer);
     };
@@ -229,7 +239,7 @@ const onChangeKey = (e)=>{
                 <tbody>
                         <tr>
                             <td>
-                            <Form.Select
+                            <Form.Select                       
                             onChange={(e)=>{onChangePhase(e)}}
                             >                            
                             <option>Seleccionar fase</option>
@@ -241,6 +251,7 @@ const onChangeKey = (e)=>{
                             </td>
                             <td>
                             <Form.Select
+                            id="selector-partido"
                             onChange={(e)=>{
                             onChangeKey(e)
                             }}
@@ -256,7 +267,7 @@ const onChangeKey = (e)=>{
         <div className="square bg-primary rounded-pill bg-light" style=
       {{hposition:"relative",marginBottom:"1%",padding:"1%",
         backgroundColor :"white"}}>
-        <h1><center>Gráfica de {partido}</center></h1>  
+        <h1><center>{partido}</center></h1>  
         </div>          
         <div style={{height:"85vh",position:"relative",marginBottom:"1%",padding:"1%",
         backgroundColor :"white", border:"4px dotted blue",

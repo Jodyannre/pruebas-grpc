@@ -3,7 +3,7 @@ import axios from "axios";
 import '../styles/styles.css'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button';
-import {Form} from 'react-bootstrap'
+//import {Form} from 'react-bootstrap'
 import Card from 'react-bootstrap/Card';
 import Spinner from 'react-bootstrap/Spinner';
 
@@ -12,6 +12,7 @@ export default function MongoDash() {
   const [total,setTotal] = useState(0)
   const [time, setTime] = React.useState(0);
   const [showPage, setShowPage] = useState(false)
+  const [purgeOn, setPurgeOn] = useState(false)
 
   const getLogsMongo = async () => {
     const res = await axios.get(`http://${global.ip}:${global.port}/getLogsMongo`);
@@ -29,6 +30,14 @@ export default function MongoDash() {
     setTotal(res.data.Total)
     console.log(res.data.Total)
     //console.log(datos)
+  }
+
+  const goPurge = async (e) =>{
+    const res = await axios.get(`http://${global.ip}:${global.port}/purge`);
+    setPurgeOn(!purgeOn)
+    //console.log(e.target);
+    //alert("Click en el boton")
+    console.log(res.data)
   }
 
   const GetLogsFormat = ()=>{
@@ -52,16 +61,16 @@ export default function MongoDash() {
 
     const timer = window.setInterval(() => {
       setTime(time + 1);
-    }, 2000);
+    }, 1250);
     return () => {
       window.clearInterval(timer);
     };
-  },[time]);
+  },[time,purgeOn]);
 
   //Tabla de resultados
-  const data= [{memoria:"Joel Rodriguez", pid:25,nombre:"Estudiante",usuario:"otro val"}]
-  const dataChildren= [{nombre:"no tiene",pid:-1}]
-  const headers = [{name:"nombre",age:"edad",profession:"otro", children:"otro"}]
+  //const data= [{memoria:"Joel Rodriguez", pid:25,nombre:"Estudiante",usuario:"otro val"}]
+  //const dataChildren= [{nombre:"no tiene",pid:-1}]
+  //const headers = [{name:"nombre",age:"edad",profession:"otro", children:"otro"}]
   return (
         showPage ? <>
             <div className="square bg-primary rounded-pill bg-light" 
@@ -96,7 +105,7 @@ export default function MongoDash() {
                                 {total}
                             </td>
                             <td style={{verticalAlign: "middle"}}>
-                            <Button variant="outline-primary">Purge</Button>{' '}
+                            <Button onClick={goPurge} variant="outline-primary">Purge</Button>{' '}
                             </td>
                         </tr>                    
                 </tbody>              

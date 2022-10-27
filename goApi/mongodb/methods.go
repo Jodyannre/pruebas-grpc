@@ -73,6 +73,39 @@ func WriteLogMongo(client *mongo.Client) http.HandlerFunc {
 	}
 }
 
+func Purge(client *mongo.Client) http.HandlerFunc {
+	return func(res http.ResponseWriter, req *http.Request) {
+		SetCors(res)
+		collection := client.Database("usactar").Collection("logs")
+		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+		opts := options.Find().SetSort(bson.D{{"_id", -1}})
+		opts.SetLimit(10)
+
+		cursor, err := collection.Find(ctx, bson.M{}, opts)
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(`{"mensaje": "` + err.Error() + `"}`))
+			return
+		}
+		defer cursor.Close(ctx)
+		for cursor.Next(ctx) {
+			var nLog LogMongo
+			cursor.Decode(&nLog)
+			collection.DeleteOne(ctx, bson.M{"_id": nLog.ID})
+			//fmt.Println(nLog.ID)
+		}
+		if err := cursor.Err(); err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(`{"mensaje": "` + err.Error() + `"}`))
+			return
+		}
+		json.NewEncoder(res).Encode("{mensaje: Eliminados exitosamente.}")
+
+	}
+
+}
+
 func SetCors(wri http.ResponseWriter) {
 	(wri).Header().Set("Access-Control-Allow-Origin", "*")
 	(wri).Header().Set("Access-Control-Allow-Headers", "Content-Type")

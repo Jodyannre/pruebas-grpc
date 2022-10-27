@@ -55,6 +55,7 @@ func main() {
 	router.HandleFunc("/saveMatch", redisdb.SaveMatch(clientRedis, ctx2)).Methods("POST")
 	router.HandleFunc("/getDataFases", redisdb.GetAllMatches(clientRedis, ctx2)).Methods("GET")
 	router.HandleFunc("/getDataPartidos", redisdb.GetCounters(clientRedis, ctx2)).Methods("GET")
+	router.HandleFunc("/purge", mongodb.Purge(clientMongo)).Methods("GET")
 
 	fmt.Printf("App running at port: %s", PORT_APP)
 	http.ListenAndServe(":"+PORT_APP, router)
